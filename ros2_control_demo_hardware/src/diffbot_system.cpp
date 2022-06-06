@@ -165,7 +165,7 @@ CallbackReturn DiffBotSystemHardware::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type DiffBotSystemHardware::read()
+hardware_interface::return_type DiffBotSystemHardware::read(const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   RCLCPP_INFO(rclcpp::get_logger("DiffBotSystemHardware"), "Reading...");
 
@@ -202,7 +202,7 @@ hardware_interface::return_type DiffBotSystemHardware::read()
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type ros2_control_demo_hardware::DiffBotSystemHardware::write()
+hardware_interface::return_type ros2_control_demo_hardware::DiffBotSystemHardware::write(const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   RCLCPP_INFO(rclcpp::get_logger("DiffBotSystemHardware"), "Writing...");
 

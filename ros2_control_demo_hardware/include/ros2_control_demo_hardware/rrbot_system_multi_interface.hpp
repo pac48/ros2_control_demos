@@ -29,11 +29,13 @@
 #include "rclcpp_lifecycle/state.hpp"
 #include "ros2_control_demo_hardware/visibility_control.h"
 
-using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 namespace ros2_control_demo_hardware
 {
-class RRBotSystemMultiInterfaceHardware : public hardware_interface::SystemInterface
+    using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
+
+
+    class RRBotSystemMultiInterfaceHardware : public hardware_interface::SystemInterface
 {
 public:
   RCLCPP_SHARED_PTR_DEFINITIONS(RRBotSystemMultiInterfaceHardware);
@@ -59,10 +61,10 @@ public:
   CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
 
   ROS2_CONTROL_DEMO_HARDWARE_PUBLIC
-  hardware_interface::return_type read() override;
+  hardware_interface::return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
   ROS2_CONTROL_DEMO_HARDWARE_PUBLIC
-  hardware_interface::return_type write() override;
+  hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 private:
   // Parameters for the RRBot simulation
@@ -80,7 +82,7 @@ private:
 
   // Enum defining at which control level we are
   // Dumb way of maintaining the command_interface type per joint.
-  enum integration_level_t : std::uint8_t
+  enum class integration_level_t : std::uint8_t
   {
     UNDEFINED = 0,
     POSITION = 1,

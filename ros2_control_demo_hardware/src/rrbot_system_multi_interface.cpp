@@ -238,7 +238,7 @@ CallbackReturn RRBotSystemMultiInterfaceHardware::on_activate(
   }
 
   RCLCPP_INFO(
-    rclcpp::get_logger("RRBotSystemMultiInterfaceHardware"), "System successfully started! %u",
+    rclcpp::get_logger("RRBotSystemMultiInterfaceHardware"), "System successfully started! %hhu",
     control_level_[0]);
   return CallbackReturn::SUCCESS;
 }
@@ -263,7 +263,7 @@ CallbackReturn RRBotSystemMultiInterfaceHardware::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type RRBotSystemMultiInterfaceHardware::read()
+hardware_interface::return_type RRBotSystemMultiInterfaceHardware::read(const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   for (std::size_t i = 0; i < hw_positions_.size(); i++)
   {
@@ -299,7 +299,7 @@ hardware_interface::return_type RRBotSystemMultiInterfaceHardware::read()
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type RRBotSystemMultiInterfaceHardware::write()
+hardware_interface::return_type RRBotSystemMultiInterfaceHardware::write(const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   /*RCLCPP_INFO(
     rclcpp::get_logger("RRBotSystemMultiInterfaceHardware"),
@@ -309,7 +309,7 @@ hardware_interface::return_type RRBotSystemMultiInterfaceHardware::write()
     // Simulate sending commands to the hardware
     RCLCPP_INFO(
       rclcpp::get_logger("RRBotSystemMultiInterfaceHardware"),
-      "Got the commands pos: %.5f, vel: %.5f, acc: %.5f for joint %lu, control_lvl:%u",
+      "Got the commands pos: %.5f, vel: %.5f, acc: %.5f for joint %lu, control_lvl:%hhu",
       hw_commands_positions_[i], hw_commands_velocities_[i], hw_commands_accelerations_[i], i,
       control_level_[i]);
   }

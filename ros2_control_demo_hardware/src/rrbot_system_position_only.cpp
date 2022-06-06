@@ -179,7 +179,7 @@ CallbackReturn RRBotSystemPositionOnlyHardware::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type RRBotSystemPositionOnlyHardware::read()
+hardware_interface::return_type RRBotSystemPositionOnlyHardware::read(const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   RCLCPP_INFO(rclcpp::get_logger("RRBotSystemPositionOnlyHardware"), "Reading...");
 
@@ -196,7 +196,7 @@ hardware_interface::return_type RRBotSystemPositionOnlyHardware::read()
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type RRBotSystemPositionOnlyHardware::write()
+hardware_interface::return_type RRBotSystemPositionOnlyHardware::write(const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   RCLCPP_INFO(rclcpp::get_logger("RRBotSystemPositionOnlyHardware"), "Writing...");
 

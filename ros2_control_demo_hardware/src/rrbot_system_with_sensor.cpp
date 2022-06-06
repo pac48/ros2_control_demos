@@ -196,7 +196,7 @@ CallbackReturn RRBotSystemWithSensorHardware::on_deactivate(
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type RRBotSystemWithSensorHardware::read()
+hardware_interface::return_type RRBotSystemWithSensorHardware::read(const rclcpp::Time & timeIn, const rclcpp::Duration & period)
 {
   RCLCPP_INFO(rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Reading...please wait...");
 
@@ -206,7 +206,7 @@ hardware_interface::return_type RRBotSystemWithSensorHardware::read()
     hw_joint_states_[i] =
       hw_joint_commands_[i] + (hw_joint_states_[i] - hw_joint_commands_[i]) / hw_slowdown_;
     RCLCPP_INFO(
-      rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Got state %.5f for joint %u!",
+      rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Got state %.5f for joint %zu!",
       hw_joint_states_[i], i);
   }
   RCLCPP_INFO(rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Joints successfully read!");
@@ -226,7 +226,7 @@ hardware_interface::return_type RRBotSystemWithSensorHardware::read()
   return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type ros2_control_demo_hardware::RRBotSystemWithSensorHardware::write()
+hardware_interface::return_type ros2_control_demo_hardware::RRBotSystemWithSensorHardware::write(const rclcpp::Time & time, const rclcpp::Duration & period)
 {
   RCLCPP_INFO(rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Writing...please wait...");
 
@@ -234,7 +234,7 @@ hardware_interface::return_type ros2_control_demo_hardware::RRBotSystemWithSenso
   {
     // Simulate sending commands to the hardware
     RCLCPP_INFO(
-      rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Got command %.5f for joint %u!",
+      rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Got command %.5f for joint %zu!",
       hw_joint_commands_[i], i);
   }
   RCLCPP_INFO(rclcpp::get_logger("RRBotSystemWithSensorHardware"), "Joints successfully written!");
