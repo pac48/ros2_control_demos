@@ -20,6 +20,7 @@ from launch.conditions import IfCondition
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -114,7 +115,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "use_fake_hardware",
-            default_value="true",
+            default_value="false",
             description="Start robot with fake hardware mirroring command to its states.",
         )
     )
@@ -201,74 +202,87 @@ def generate_launch_description():
         [FindPackageShare("ur_robot_driver"), "resources", "rtde_output_recipe.txt"]
     )
 
+    # robot_description_content = Command(
+    #     [
+    #         PathJoinSubstitution([FindExecutable(name="xacro")]),
+    #         " ",
+    #         PathJoinSubstitution(
+    #             [FindPackageShare(description_package), "urdf", description_file]
+    #         ),
+    #         " ",
+    #         "robot_ip:=",
+    #         robot_ip,
+    #         " ",
+    #         "joint_limit_params:=",
+    #         joint_limit_params,
+    #         " ",
+    #         "kinematics_params:=",
+    #         kinematics_params,
+    #         " ",
+    #         "physical_params:=",
+    #         physical_params,
+    #         " ",
+    #         "visual_params:=",
+    #         visual_params,
+    #         " ",
+    #         "safety_limits:=",
+    #         safety_limits,
+    #         " ",
+    #         "safety_pos_margin:=",
+    #         safety_pos_margin,
+    #         " ",
+    #         "safety_k_position:=",
+    #         safety_k_position,
+    #         " ",
+    #         "name:=",
+    #         ur_type,
+    #         " ",
+    #         "script_filename:=",
+    #         script_filename,
+    #         " ",
+    #         "input_recipe_filename:=",
+    #         input_recipe_filename,
+    #         " ",
+    #         "output_recipe_filename:=",
+    #         output_recipe_filename,
+    #         " ",
+    #         "prefix:=",
+    #         prefix,
+    #         " ",
+    #         "use_fake_hardware:=",
+    #         use_fake_hardware,
+    #         " ",
+    #         "fake_sensor_commands:=",
+    #         fake_sensor_commands,
+    #         " ",
+    #         "headless_mode:=",
+    #         headless_mode,
+    #         " ",
+    #         "initial_positions_file:=",
+    #         PathJoinSubstitution(
+    #             [
+    #                 FindPackageShare("rrbot_description"),
+    #                 "admittance_demo",
+    #                 "initial_positions.yaml",
+    #             ]
+    #         ),
+    #         " ",
+    #     ]
+    # )
+
+
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
             " ",
             PathJoinSubstitution(
-                [FindPackageShare(description_package), "urdf", description_file]
-            ),
-            " ",
-            "robot_ip:=",
-            robot_ip,
-            " ",
-            "joint_limit_params:=",
-            joint_limit_params,
-            " ",
-            "kinematics_params:=",
-            kinematics_params,
-            " ",
-            "physical_params:=",
-            physical_params,
-            " ",
-            "visual_params:=",
-            visual_params,
-            " ",
-            "safety_limits:=",
-            safety_limits,
-            " ",
-            "safety_pos_margin:=",
-            safety_pos_margin,
-            " ",
-            "safety_k_position:=",
-            safety_k_position,
-            " ",
-            "name:=",
-            ur_type,
-            " ",
-            "script_filename:=",
-            script_filename,
-            " ",
-            "input_recipe_filename:=",
-            input_recipe_filename,
-            " ",
-            "output_recipe_filename:=",
-            output_recipe_filename,
-            " ",
-            "prefix:=",
-            prefix,
-            " ",
-            "use_fake_hardware:=",
-            use_fake_hardware,
-            " ",
-            "fake_sensor_commands:=",
-            fake_sensor_commands,
-            " ",
-            "headless_mode:=",
-            headless_mode,
-            " ",
-            "initial_positions_file:=",
-            PathJoinSubstitution(
-                [
-                    FindPackageShare("rrbot_description"),
-                    "admittance_demo",
-                    "initial_positions.yaml",
-                ]
-            ),
-            " ",
-        ]
+                [FindPackageShare(description_package), "urdf", "ur5_robotiq.urdf"]
+            )]
     )
-    robot_description = {"robot_description": robot_description_content}
+
+    robot_description = {"robot_description":
+                             ParameterValue(robot_description_content, value_type=str)
+                         }
 
     robot_description_semantic_content = Command(
         [
@@ -389,6 +403,11 @@ def generate_launch_description():
         condition=IfCondition(fake_sensor_commands),
         arguments=["faked_forces_controller", "-c", "/controller_manager"],
     )
+    ft_frame_node =Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments = ['--x', '0', '--y', '0', '--z', '1', '--yaw', '0', '--pitch', '0', '--roll', '0', '--frame-id', 'ee_link', '--child-frame-id', 'ft_frame']
+    )
     # aka. forward_command_controller/MultiInterfaceForwardCommandController
 
     nodes_to_start = [
@@ -402,6 +421,10 @@ def generate_launch_description():
         force_torque_sensor_broadcaster_spawner,
         admittance_controller_spawner,
         faked_forces_controller_spawner,
+        ft_frame_node,
     ]
 
     return LaunchDescription(declared_arguments + nodes_to_start)
+
+
+generate_launch_description()
