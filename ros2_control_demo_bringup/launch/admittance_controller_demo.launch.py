@@ -342,12 +342,7 @@ def generate_launch_description():
         parameters=[{"robot_ip": robot_ip}],
     )
 
-    robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="both",
-        parameters=[robot_description],
-    )
+
 
     rviz_node = Node(
         package="rviz2",
@@ -358,37 +353,44 @@ def generate_launch_description():
         arguments=["-d", rviz_config_file],
     )
 
-    joint_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    robot_state_publisher_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[robot_description],
     )
 
-    io_and_status_controller_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["io_and_status_controller", "-c", "/controller_manager"],
-    )
+    # joint_state_broadcaster_spawner = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    # )
 
-    speed_scaling_state_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "speed_scaling_state_broadcaster",
-            "--controller-manager",
-            "/controller_manager",
-        ],
-    )
+    # io_and_status_controller_spawner = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     arguments=["io_and_status_controller", "-c", "/controller_manager"],
+    # )
 
-    force_torque_sensor_broadcaster_spawner = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=[
-            "force_torque_sensor_broadcaster",
-            "--controller-manager",
-            "/controller_manager",
-        ],
-    )
+    # speed_scaling_state_broadcaster_spawner = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     arguments=[
+    #         "speed_scaling_state_broadcaster",
+    #         "--controller-manager",
+    #         "/controller_manager",
+    #     ],
+    # )
+
+    # force_torque_sensor_broadcaster_spawner = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     arguments=[
+    #         "force_torque_sensor_broadcaster",
+    #         "--controller-manager",
+    #         "/controller_manager",
+    #     ],
+    # )
     # aka ur_controllers/ForceTorqueStateBroadcaster
 
     admittance_controller_spawner = Node(
@@ -406,7 +408,7 @@ def generate_launch_description():
     ft_frame_node =Node(
         package='tf2_ros',
         executable='static_transform_publisher',
-        arguments = ['--x', '0', '--y', '0', '--z', '1', '--yaw', '0', '--pitch', '0', '--roll', '0', '--frame-id', 'ee_link', '--child-frame-id', 'ft_frame']
+        arguments = ['--x', '0', '--y', '0', '--z', '0', '--yaw', '0', '--pitch', '0', '--roll', '0', '--frame-id', 'ee_link', '--child-frame-id', 'ft_frame']
     )
     # aka. forward_command_controller/MultiInterfaceForwardCommandController
 
@@ -415,10 +417,10 @@ def generate_launch_description():
         dashboard_client_node,
         robot_state_publisher_node,
         rviz_node,
-        joint_state_broadcaster_spawner,
+        # joint_state_broadcaster_spawner,
         # io_and_status_controller_spawner,
-        speed_scaling_state_broadcaster_spawner,
-        force_torque_sensor_broadcaster_spawner,
+        # speed_scaling_state_broadcaster_spawner,
+        # force_torque_sensor_broadcaster_spawner,
         admittance_controller_spawner,
         faked_forces_controller_spawner,
         ft_frame_node,

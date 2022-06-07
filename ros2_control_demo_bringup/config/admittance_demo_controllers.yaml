@@ -161,7 +161,7 @@ admittance_controller:
       - wrist_3_joint
 
     command_interfaces:
-      - position
+      - velocity
 
     state_interfaces:
       - position
@@ -177,7 +177,7 @@ admittance_controller:
     action_monitor_rate: 20.0 # Defaults to 20
 
     allow_partial_joints_goal: false # Defaults to false
-    open_loop_control: true
+    open_loop_control: false
     allow_integration_in_goal_trajectories: true
     constraints:
       stopped_velocity_tolerance: 0.01 # Defaults to 0.01
@@ -207,9 +207,9 @@ admittance_controller:
       # Having ".0" at the end is MUST, otherwise there is a loading error
       # F = M*a + D*v + S*(x - x_d)
       mass:
-        x: 10.0
-        y: 10.0
-        z: 10.0
+        x: 2.1
+        y: 2.1
+        z: 2.1
         rx: 10.0
         ry: 10.0
         rz: 10.0
@@ -223,9 +223,9 @@ admittance_controller:
         rz: 2.23607
 
       stiffness:
-        x: 50.0
-        y: 50.0
-        z: 50.0
+        x: 1000.0
+        y: 1000.0
+        z: 1000.0
         rx: 50.0
         ry: 50.0
         rz: 50.0
