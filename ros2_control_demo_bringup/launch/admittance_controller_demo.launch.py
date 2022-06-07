@@ -407,8 +407,8 @@ def generate_launch_description():
     )
     ft_frame_node =Node(
         package='tf2_ros',
-        executable='static_transform_publisher',
-        arguments = ['--x', '0', '--y', '0', '--z', '0', '--yaw', '0', '--pitch', '0', '--roll', '0', '--frame-id', 'ee_link', '--child-frame-id', 'ft_frame']
+        executable='static_transform_publisher',                             # ee_link
+        arguments = ['--x', '0', '--y', '0', '--z', '0', '--yaw', '0', '--pitch', '0', '--roll', '0', '--frame-id', 'wrist_3_link', '--child-frame-id', 'ft_frame']
     )
     # aka. forward_command_controller/MultiInterfaceForwardCommandController
 
