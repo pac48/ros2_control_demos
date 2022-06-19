@@ -48,6 +48,7 @@ def generate_launch_description():
             Used only if 'use_fake_hardware' parameter is true.",
         )
     )
+
     declared_arguments.append(
         DeclareLaunchArgument(
             "slowdown",
@@ -65,8 +66,8 @@ def generate_launch_description():
     base_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([ThisLaunchFileDir(), "/rrbot_base.launch.py"]),
         launch_arguments={
-            "controllers_file": "rrbot_with_sensor_controllers.yaml",
-            "description_file": "rrbot_system_with_sensor.urdf.xacro",
+            "controllers_file": "rrbot_with_external_sensor_controllers.yaml",
+            "description_file": "rrbot_system_with_external_sensor.urdf.xacro",
             "prefix": prefix,
             "use_fake_hardware": use_fake_hardware,
             "fake_sensor_commands": fake_sensor_commands,

@@ -1,4 +1,4 @@
-// Copyright 2021 ros2_control Development Team
+// Copyright (c) 2021, Stogl Robotics Consulting UG (haftungsbeschränkt)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef ROS2_CONTROL_DEMO_HARDWARE__DIFFBOT_SYSTEM_HPP_
-#define ROS2_CONTROL_DEMO_HARDWARE__DIFFBOT_SYSTEM_HPP_
+//
+// Authors: Subhas Das, Denis Stogl
+//
+
+#ifndef ROS2_CONTROL_DEMO_HARDWARE__EXTERNAL_RRBOT_FORCE_TORQUE_SENSOR_HPP_
+#define ROS2_CONTROL_DEMO_HARDWARE__EXTERNAL_RRBOT_FORCE_TORQUE_SENSOR_HPP_
 
 #include <memory>
 #include <string>
@@ -21,22 +25,17 @@
 
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
-#include "hardware_interface/system_interface.hpp"
+#include "hardware_interface/sensor_interface.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
-#include "rclcpp/clock.hpp"
-#include "rclcpp/duration.hpp"
 #include "rclcpp/macros.hpp"
-#include "rclcpp/time.hpp"
-#include "rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp"
-#include "rclcpp_lifecycle/state.hpp"
 #include "ros2_control_demo_hardware/visibility_control.h"
 
 namespace ros2_control_demo_hardware
 {
-class DiffBotSystemHardware : public hardware_interface::SystemInterface
+class ExternalRRBotForceTorqueSensorHardware : public hardware_interface::SensorInterface
 {
 public:
-  RCLCPP_SHARED_PTR_DEFINITIONS(DiffBotSystemHardware);
+  RCLCPP_SHARED_PTR_DEFINITIONS(ExternalRRBotForceTorqueSensorHardware);
 
   ROS2_CONTROL_DEMO_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_init(
@@ -44,9 +43,6 @@ public:
 
   ROS2_CONTROL_DEMO_HARDWARE_PUBLIC
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
-
-  ROS2_CONTROL_DEMO_HARDWARE_PUBLIC
-  std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
 
   ROS2_CONTROL_DEMO_HARDWARE_PUBLIC
   hardware_interface::CallbackReturn on_activate(
@@ -60,24 +56,16 @@ public:
   hardware_interface::return_type read(
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-  ROS2_CONTROL_DEMO_HARDWARE_PUBLIC
-  hardware_interface::return_type write(
-    const rclcpp::Time & time, const rclcpp::Duration & period) override;
-
 private:
-  // Parameters for the DiffBot simulation
+  // Parameters for the RRBot simulation
   double hw_start_sec_;
   double hw_stop_sec_;
+  double hw_sensor_change_;
 
-  // Store the command for the simulated robot
-  std::vector<double> hw_commands_;
-  std::vector<double> hw_positions_;
-  std::vector<double> hw_velocities_;
-
-  // Store the wheeled robot position
-  double base_x_, base_y_, base_theta_;
+  // Store the sensor states for the simulated robot
+  std::vector<double> hw_sensor_states_;
 };
 
 }  // namespace ros2_control_demo_hardware
 
-#endif  // ROS2_CONTROL_DEMO_HARDWARE__DIFFBOT_SYSTEM_HPP_
+#endif  // ROS2_CONTROL_DEMO_HARDWARE__EXTERNAL_RRBOT_FORCE_TORQUE_SENSOR_HPP_

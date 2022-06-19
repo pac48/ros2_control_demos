@@ -360,11 +360,11 @@ def generate_launch_description():
         parameters=[robot_description],
     )
 
-    # joint_state_broadcaster_spawner = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
-    # )
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+    )
 
     # io_and_status_controller_spawner = Node(
     #     package="controller_manager",
@@ -382,15 +382,15 @@ def generate_launch_description():
     #     ],
     # )
 
-    # force_torque_sensor_broadcaster_spawner = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     arguments=[
-    #         "force_torque_sensor_broadcaster",
-    #         "--controller-manager",
-    #         "/controller_manager",
-    #     ],
-    # )
+    force_torque_sensor_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "force_torque_sensor_broadcaster",
+            "--controller-manager",
+            "/controller_manager",
+        ],
+    )
     # aka ur_controllers/ForceTorqueStateBroadcaster
 
     admittance_controller_spawner = Node(
@@ -399,34 +399,39 @@ def generate_launch_description():
         arguments=["admittance_controller", "-c", "/controller_manager"],
     )
 
+    joint_trajectory_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["joint_trajectory_controller", "-c", "/controller_manager"],
+    )
+
     faked_forces_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        condition=IfCondition(fake_sensor_commands),
+        # condition=IfCondition(fake_sensor_commands),
         arguments=["faked_forces_controller", "-c", "/controller_manager"],
     )
-    ft_frame_node =Node(
+    ft_frame_node = Node(
         package='tf2_ros',
-        executable='static_transform_publisher',                             # ee_link
+        executable='static_transform_publisher',                             # ee_link  wrist_3_link
         arguments = ['--x', '0', '--y', '0', '--z', '0', '--yaw', '0', '--pitch', '0', '--roll', '0', '--frame-id', 'wrist_3_link', '--child-frame-id', 'ft_frame']
     )
     # aka. forward_command_controller/MultiInterfaceForwardCommandController
 
     nodes_to_start = [
-        control_node,
+        # control_node,
         dashboard_client_node,
         robot_state_publisher_node,
         rviz_node,
-        # joint_state_broadcaster_spawner,
+        joint_state_broadcaster_spawner,
         # io_and_status_controller_spawner,
         # speed_scaling_state_broadcaster_spawner,
         # force_torque_sensor_broadcaster_spawner,
         admittance_controller_spawner,
+        joint_trajectory_controller_spawner,
         faked_forces_controller_spawner,
         ft_frame_node,
     ]
 
     return LaunchDescription(declared_arguments + nodes_to_start)
 
-
-generate_launch_description()

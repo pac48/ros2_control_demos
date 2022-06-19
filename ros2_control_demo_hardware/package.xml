@@ -14,7 +14,6 @@
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>rclcpp</depend>
-  <depend>control_msgs</depend>
   <depend>rclcpp_lifecycle</depend>
 
   <test_depend>ament_cmake_gtest</test_depend>

@@ -8,9 +8,6 @@ controller_manager:
     io_and_status_controller:
       type: ur_controllers/GPIOController
 
-    speed_scaling_state_broadcaster:
-      type: ur_controllers/SpeedScalingStateBroadcaster
-
     force_torque_sensor_broadcaster:
       type: ur_controllers/ForceTorqueStateBroadcaster
 
@@ -32,12 +29,6 @@ controller_manager:
     faked_forces_controller:
       type: forward_command_controller/MultiInterfaceForwardCommandController
 
-
-speed_scaling_state_broadcaster:
-  ros__parameters:
-    state_publish_rate: 100.0
-
-
 force_torque_sensor_broadcaster:
   ros__parameters:
     sensor_name: tcp_fts_sensor
@@ -51,37 +42,6 @@ force_torque_sensor_broadcaster:
     frame_id: tool0
     topic_name: ft_data
 
-
-force_sensor_broadcaster:
-  ros__parameters:
-    sensor_name: tcp_fts_sensor
-    frame_id: tool0
-    additional_frames_to_publish: [base_link]
-
-    sensor_filter_chain:
-      filter1:
-        type: control_filters/LowPassFilterWrench
-        name: low_pass_filter
-        params:
-          sampling_frequency: 200.0
-          damping_frequency: 50.0
-          damping_intensity: 1.0
-          divider: 1
-
-      filter2:
-        type: control_filters/GravityCompensationWrench
-        name: tool_gravity_compensation
-        params:
-          CoG:
-            x: 0.0
-            y: 0.0
-            z: 0.1
-          force: 0.0        # mass * 9.81
-          force_frame: wrist_3_link
-          sensor_frame: ft_frame
-          world_frame: base_link
-
-
 joint_trajectory_controller:
   ros__parameters:
     joints:
@@ -93,9 +53,17 @@ joint_trajectory_controller:
       - wrist_3_joint
     command_interfaces:
       - position
+      - velocity
     state_interfaces:
       - position
       - velocity
+    command_joints:
+      - admittance_controller/shoulder_pan_joint
+      - admittance_controller/shoulder_lift_joint
+      - admittance_controller/elbow_joint
+      - admittance_controller/wrist_1_joint
+      - admittance_controller/wrist_2_joint
+      - admittance_controller/wrist_3_joint
     state_publish_rate: 100.0
     action_monitor_rate: 20.0
     allow_partial_joints_goal: false
@@ -108,46 +76,6 @@ joint_trajectory_controller:
       wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
       wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
       wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
-
-
-scaled_joint_trajectory_controller:
-  ros__parameters:
-    joints:
-      - shoulder_pan_joint
-      - shoulder_lift_joint
-      - elbow_joint
-      - wrist_1_joint
-      - wrist_2_joint
-      - wrist_3_joint
-    command_interfaces:
-      - position
-    state_interfaces:
-      - position
-      - velocity
-    state_publish_rate: 100.0
-    action_monitor_rate: 20.0
-    allow_partial_joints_goal: false
-    constraints:
-      stopped_velocity_tolerance: 0.2
-      goal_time: 0.0
-      shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
-      shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
-      elbow_joint: { trajectory: 0.2, goal: 0.1 }
-      wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
-      wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
-      wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
-
-
-forward_velocity_controller:
-  ros__parameters:
-    joints:
-      - shoulder_pan_joint
-      - shoulder_lift_joint
-      - elbow_joint
-      - wrist_1_joint
-      - wrist_2_joint
-      - wrist_3_joint
-    interface_name: velocity
 
 
 admittance_controller:
@@ -161,9 +89,14 @@ admittance_controller:
       - wrist_3_joint
 
     command_interfaces:
+      - position
       - velocity
 
     state_interfaces:
+      - position
+      - velocity
+
+    chainable_command_interfaces:
       - position
       - velocity
 
@@ -184,16 +117,15 @@ admittance_controller:
       goal_time: 0.0 # Defaults to 0.0 (start immediately)
 
     IK:
-#      plugin_name: "ik_interface"
-      plugin_name: "rl_differential_ik_plugin/RLKinematics"
+      plugin_name: kdl_plugin/KDLKinematics
       base: base_link # Assumed to be stationary
       tip: tool0
       group_name: ur5e_manipulator
 
-    endeffector_frame: tool0
-    control_frame: base_link # Admittance calcs (displacement etc) are done in this frame. Usually the tool or end-effector
+    end_effector_name: ee_link
+    control_frame: ee_link # Admittance calcs (displacement etc) are done in this frame. Usually the tool or end-effector
     fixed_world_frame: base_link  # Gravity points down (neg. Z) in this frame (Usually: world or base_link)
-    sensor_frame: ft_frame  # Wrench measurements are in this frame
+    sensor_frame: ee_link  # ee_link Wrench measurements are in this frame
 
     admittance:
       selected_axes:
@@ -207,14 +139,14 @@ admittance_controller:
       # Having ".0" at the end is MUST, otherwise there is a loading error
       # F = M*a + D*v + S*(x - x_d)
       mass:
-        x: 2.1
-        y: 2.1
-        z: 2.1
+        x: 10.0
+        y: 10.0
+        z: 10.0
         rx: 10.0
         ry: 10.0
         rz: 10.0
 
-      damping_ratio:    # damping can be used instead: zeta = D / (2 * sqrt( M * S ))
+      damping_ratio: # damping can be used instead: zeta = D / (2 * sqrt( M * S ))
         x: 2.828427
         y: 2.828427
         z: 2.828427
@@ -223,12 +155,12 @@ admittance_controller:
         rz: 2.23607
 
       stiffness:
-        x: 1000.0
-        y: 1000.0
-        z: 1000.0
-        rx: 50.0
-        ry: 50.0
-        rz: 50.0
+        x: 100.0
+        y: 5000.0
+        z: 5000.0
+        rx: 500.0
+        ry: 500.0
+        rz: 500.0
 
     input_wrench_filter_chain:
       filter1:
