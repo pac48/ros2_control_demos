@@ -23,7 +23,7 @@ from sensor_msgs.msg import JointState
 class PublisherJointTrajectory(Node):
     def __init__(self):
         super().__init__("publisher_position_trajectory_controller")
-        # Declare all parameters
+        # Declare all config
         self.declare_parameter("controller_name", "position_trajectory_controller")
         self.declare_parameter("wait_sec_between_publish", 6)
         self.declare_parameter("goal_names", ["pos1", "pos2"])
@@ -31,7 +31,7 @@ class PublisherJointTrajectory(Node):
         self.declare_parameter("check_starting_point", False)
         self.declare_parameter("starting_point_limits")
 
-        # Read parameters
+        # Read config
         controller_name = self.get_parameter("controller_name").value
         wait_sec_between_publish = self.get_parameter("wait_sec_between_publish").value
         goal_names = self.get_parameter("goal_names").value
@@ -64,7 +64,7 @@ class PublisherJointTrajectory(Node):
 
         self.joint_state_msg_received = False
 
-        # Read all positions from parameters
+        # Read all positions from config
         self.goals = []
         for name in goal_names:
             self.declare_parameter(name)

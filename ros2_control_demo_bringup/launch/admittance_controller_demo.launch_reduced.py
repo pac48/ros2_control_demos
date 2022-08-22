@@ -78,7 +78,7 @@ def generate_launch_description():
         [FindPackageShare("rrbot_description"), "admittance_demo", "admittance_demo.rviz"]
     )
 
-    # parameters
+    # config
     robot_description = {"robot_description": robot_desc}
     initial_joint_controllers = PathJoinSubstitution([FindPackageShare(runtime_config_package), "config", controllers_file])
 

@@ -303,7 +303,7 @@ hardware_interface::return_type RRBotSystemMultiInterfaceHardware::read(
     // BEGIN: This part here is for exemplary purposes - Please do not copy to your production code
     RCLCPP_INFO(
       rclcpp::get_logger("RRBotSystemMultiInterfaceHardware"),
-      "Got joint_pos: %.5f, vel: %.5f, acc: %.5f for joint %lu!", hw_states_positions_[i],
+      "Got joint_pos_: %.5f, vel: %.5f, acc: %.5f for joint %lu!", hw_states_positions_[i],
       hw_states_velocities_[i], hw_states_accelerations_[i], i);
     // END: This part here is for exemplary purposes - Please do not copy to your production code
   }
@@ -319,7 +319,7 @@ hardware_interface::return_type RRBotSystemMultiInterfaceHardware::write(
     // Simulate sending commands to the hardware
     RCLCPP_INFO(
       rclcpp::get_logger("RRBotSystemMultiInterfaceHardware"),
-      "Got the commands joint_pos: %.5f, vel: %.5f, acc: %.5f for joint %lu, control_lvl:%u",
+      "Got the commands joint_pos_: %.5f, vel: %.5f, acc: %.5f for joint %lu, control_lvl:%u",
       hw_commands_positions_[i], hw_commands_velocities_[i], hw_commands_accelerations_[i], i,
       control_level_[i]);
   }

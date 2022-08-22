@@ -21,17 +21,17 @@ from std_msgs.msg import Float64MultiArray
 class PublisherForwardPosition(Node):
     def __init__(self):
         super().__init__("publisher_forward_position_controller")
-        # Declare all parameters
+        # Declare all config
         self.declare_parameter("controller_name", "forward_position_controller")
         self.declare_parameter("wait_sec_between_publish", 5)
         self.declare_parameter("goal_names", ["pos1", "pos2"])
 
-        # Read parameters
+        # Read config
         controller_name = self.get_parameter("controller_name").value
         wait_sec_between_publish = self.get_parameter("wait_sec_between_publish").value
         goal_names = self.get_parameter("goal_names").value
 
-        # Read all positions from parameters
+        # Read all positions from config
         self.goals = []
         for name in goal_names:
             self.declare_parameter(name)

@@ -326,10 +326,7 @@ def generate_launch_description():
             robot_description_semantic,
             joint_limits_admittance,
         ],
-        output={
-            "stdout": "screen",
-            "stderr": "screen",
-        },
+        output="both",
     )
 
     dashboard_client_node = Node(
@@ -337,7 +334,7 @@ def generate_launch_description():
         condition=IfCondition(launch_dashboard_client),
         executable="dashboard_client",
         name="dashboard_client",
-        output="screen",
+        #output="screen",
         emulate_tty=True,
         parameters=[{"robot_ip": robot_ip}],
     )
@@ -420,15 +417,15 @@ def generate_launch_description():
 
     nodes_to_start = [
         # control_node,
-        dashboard_client_node,
-        robot_state_publisher_node,
-        rviz_node,
-        joint_state_broadcaster_spawner,
+        # dashboard_client_node,
+        # robot_state_publisher_node,
+        # rviz_node,
+        # joint_state_broadcaster_spawner,
         # io_and_status_controller_spawner,
         # speed_scaling_state_broadcaster_spawner,
         # force_torque_sensor_broadcaster_spawner,
         admittance_controller_spawner,
-        joint_trajectory_controller_spawner,
+        # joint_trajectory_controller_spawner,
         faked_forces_controller_spawner,
         ft_frame_node,
     ]

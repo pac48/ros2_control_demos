@@ -470,7 +470,7 @@ Commanding the robot: see the commands below.
 
 Accessing Wrench data from 2D FTS:
 ```
-ros2 topic echo /fts_broadcaster/wrench
+ros2 topic echo /fts_broadcaster/wrench_world_
 ```
 
 
@@ -505,7 +505,7 @@ Commanding the robot: see the commands below.
 
 Accessing Wrench data from 2D FTS:
 ```
-ros2 topic echo /fts_broadcaster/wrench
+ros2 topic echo /fts_broadcaster/wrench_world_
 ```
 
 

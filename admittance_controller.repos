@@ -30,7 +30,7 @@ repositories:
     url: https://github.com/destogl/ros2_controllers.git
     version: admittance-controller-demo
 
-  teleop_twist_keyboard: # Branch: wrench
+  teleop_twist_keyboard: # Branch: wrench_world_
     type: git
     url: https://github.com/nbbrooks/teleop_twist_keyboard.git
     version: 63de1c17c4c5d0724018f3b5fd8139c472cd15ab  # Add Float64MultiArray publisher
